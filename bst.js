@@ -1,29 +1,33 @@
-// Algorithm
-// 1. Initialize start = 0, end = length of the array - 1
-// mid = (start + end) / 2
-// Create a tree node with mid as root (lets call it A)
-// Recursively do the following steps:
-// Calculate mid of left subarray and make it root of left subtree of A
-// Calculate mid of right subarray and mkae it root of right subtree of A
-// Check that array is always sorted and check that there are no duplicate values,
-// if there is duplicate values, remove them
-
-function Node(data, leftChild, rightChild) {
-  // write code here
-  return {};
+function Node(data, left, right) {
+  return { data, left, right };
 }
 
 function Tree(array) {
-  // write code here
-  let root;
-  return {};
+  let root = buildTree(array);
+  console.log(root.data);
+  console.log(root.left);
+  console.log(root.right);
+  return { root };
 }
 
 function buildTree(array) {
-  // takes array of data
-  // turn into BST full of Node objects appropriately placed
-  // don't forget to sort and remove duplicates
-  // should return the level-0 root node
+  // sort array of numbers NOT STRINGS
+  // https://stackoverflow.com/questions/7000851/how-to-sort-numbers-correctly-with-array-sort
+  array = array.sort(function (a, b) {
+    return a - b;
+  });
+
+  // remove duplicates
+  array = removeDuplicates(array);
+
+  let mid = Math.floor(array.length / 2); // mid point
+  let root = Node(
+    array[mid], // root node
+    array.slice(0, mid), // left side
+    array.slice(mid + 1, array.length) // right side
+  );
+
+  return root;
 }
 
 // visualize the binary search tree
@@ -40,8 +44,14 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
   }
 };
 
+function removeDuplicates(array) {
+  let uniqueElements = new Set(array);
+  let uniqueArray = Array.from(uniqueElements);
+  return uniqueArray;
+}
+
 function insert(value) {
-  // write code here
+  // TODO: check for existing values before insertion
 }
 
 function deleteItem(value) {
@@ -85,7 +95,8 @@ function createRandomArray() {
 
 function Driver() {
   const myArray1 = createRandomArray();
-  console.log(myArray1);
+  const tree1 = Tree(myArray1);
+  //   prettyPrint(tree1);
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
   // unbalance the tree by adding several numbers > 100
