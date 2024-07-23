@@ -11,15 +11,6 @@ function Tree(array) {
 }
 
 function buildTree(array) {
-  // sort array of numbers NOT STRINGS
-  // https://stackoverflow.com/questions/7000851/how-to-sort-numbers-correctly-with-array-sort
-  array = array.sort(function (a, b) {
-    return a - b;
-  });
-
-  // remove duplicates
-  array = removeDuplicates(array);
-
   let mid = Math.floor(array.length / 2); // mid point
   let root = Node(
     array[mid], // root node
@@ -48,6 +39,15 @@ function removeDuplicates(array) {
   let uniqueElements = new Set(array);
   let uniqueArray = Array.from(uniqueElements);
   return uniqueArray;
+}
+
+function sortArray(array) {
+  // sort array of numbers NOT STRINGS
+  // https://stackoverflow.com/questions/7000851/how-to-sort-numbers-correctly-with-array-sort
+  array = array.sort(function (a, b) {
+    return a - b;
+  });
+  return array;
 }
 
 function insert(value) {
@@ -94,9 +94,14 @@ function createRandomArray() {
 }
 
 function Driver() {
-  const myArray1 = createRandomArray();
+  let myArray1 = createRandomArray();
+  // sort array
+  myArray1 = sortArray(myArray1);
+  // remove duplicates
+  myArray1 = removeDuplicates(myArray1);
   const tree1 = Tree(myArray1);
-  //   prettyPrint(tree1);
+
+  // prettyPrint(tree1);
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
   // unbalance the tree by adding several numbers > 100
