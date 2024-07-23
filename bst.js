@@ -4,18 +4,24 @@ function Node(data, left, right) {
 
 function Tree(array) {
   let root = buildTree(array);
-  console.log(root.data);
-  console.log(root.left);
-  console.log(root.right);
+  // console.log(root.data);
+  // console.log(root.left);
+  // console.log(root.right);
+  prettyPrint(root);
   return { root };
 }
 
 function buildTree(array) {
+  // base case
+  if (array.length == 0) {
+    return null;
+  }
+
   let mid = Math.floor(array.length / 2); // mid point
   let root = Node(
     array[mid], // root node
-    array.slice(0, mid), // left side
-    array.slice(mid + 1, array.length) // right side
+    buildTree(array.slice(0, mid)), // left side
+    buildTree(array.slice(mid + 1, array.length)) // right side
   );
 
   return root;
@@ -94,14 +100,13 @@ function createRandomArray() {
 }
 
 function Driver() {
-  let myArray1 = createRandomArray();
+  // let myArray1 = createRandomArray();
+  let myArray1 = [1, 2, 3, 4, 5];
   // sort array
   myArray1 = sortArray(myArray1);
   // remove duplicates
   myArray1 = removeDuplicates(myArray1);
   const tree1 = Tree(myArray1);
-
-  // prettyPrint(tree1);
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
   // unbalance the tree by adding several numbers > 100
