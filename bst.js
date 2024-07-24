@@ -10,7 +10,7 @@ function Tree(array) {
   }
 
   function insertRec(root, value) {
-    if (root == null) {
+    if (root === null) {
       root = Node(value);
       return root;
     }
@@ -23,18 +23,42 @@ function Tree(array) {
   }
 
   function deleteItem(value) {
-    // use recursion
+    root = deleteItemRec(root, value);
+  }
+
+  function deleteItemRec(root, value) {
     // 3 cases:
-    // if node has children:
-    // TODO: if it has 1 child:
-    // replace parent with its child, left.right type syntax
-    // i.e. 40 -> 32 -> 34 -> 36 becomes 40 -> 32 -> 36
-    // TODO: if it has 2 children:
-    // Find what is next biggest, just bigger than it
-    // look in right subtree, then look at far left of the right subtree, this replaces the value
-    // leftmost value was easy to remove because it had no children
-    // if leftmost of rightsubtree has children, those children become leftchild of rightsubtree
-    // TODO: if node has no children (A LEAF), easy < no change necessary
+    // base case
+    if (root === null) {
+      return root;
+    }
+    // recursive case
+    if (value < root.data) {
+      root.left = deleteItemRec(root.left, value);
+    } else if (value > root.data) {
+      root.right = deleteItemRec(root.right, value);
+    } else {
+      // node with 1 child or no child
+      if (root.left == null) {
+        return root.right;
+      } else if (root.right == null) {
+        return root.left;
+      }
+
+      // node with 2 children
+      root.data = minValue(root.right); // root value at 2 becomes 3
+      root.right = deleteItemRec(root.right, root.data);
+    }
+    return root;
+  }
+
+  function minValue(root) {
+    let minValue = root.data;
+    while (root.left !== null) {
+      minValue = root.left.data;
+      root = root.left;
+    }
+    return minValue;
   }
 
   function find(value) {}
@@ -136,7 +160,9 @@ function Driver() {
   // remove duplicates
   myArray1 = removeDuplicates(myArray1);
   const tree1 = Tree(myArray1);
-  tree1.insert(10);
+  // tree1.deleteItem(2);
+  // tree1.deleteItem(6);
+  // tree1.deleteItem(3);
   prettyPrint(tree1.root);
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
