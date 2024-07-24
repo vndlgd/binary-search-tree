@@ -6,29 +6,20 @@ function Tree(array) {
   let root = buildTree(array);
 
   function insert(value) {
-    // Note: Value always becomes a LEAF in the tree
-    let currentNode = root; // use a pointer
-    while (currentNode.left != null && currentNode.right != null) {
-      // we've reached a leaf node if we exit
-      if (value == currentNode.data) {
-        // if this value already exists in the BST
-        break; // break out of the loop
-      }
-      if (value < currentNode.data) {
-        currentNode = currentNode.left;
-      } else {
-        currentNode = currentNode.right;
-      }
+    root = insertRec(root, value);
+  }
+
+  function insertRec(root, value) {
+    if (root == null) {
+      root = Node(value);
+      return root;
     }
-    if (value == currentNode.data) {
-      // if this value already exists in the BST
-      return; // don't insert
+    if (value < root.data) {
+      root.left = insertRec(root.left, value);
+    } else if (value > root.data) {
+      root.right = insertRec(root.right, value);
     }
-    if (value < currentNode.data) {
-      currentNode.left = Node(value, null, null);
-    } else {
-      currentNode.right = Node(value, null, null);
-    }
+    return root; // if value == root.data
   }
 
   function deleteItem(value) {
@@ -68,20 +59,6 @@ function Tree(array) {
     // write code here
   }
 
-  // visualize the binary search tree
-  const prettyPrint = (node, prefix = '', isLeft = true) => {
-    if (node === null) {
-      return;
-    }
-    if (node.right !== null) {
-      prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-    }
-    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
-    if (node.left !== null) {
-      prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-    }
-  };
-
   return {
     root,
     insert,
@@ -92,7 +69,6 @@ function Tree(array) {
     depth,
     isBalanced,
     rebalance,
-    prettyPrint,
   };
 }
 
@@ -127,6 +103,20 @@ function sortArray(array) {
   return array;
 }
 
+// visualize the binary search tree
+const prettyPrint = (node, prefix = '', isLeft = true) => {
+  if (node === null) {
+    return;
+  }
+  if (node.right !== null) {
+    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+  }
+  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+  if (node.left !== null) {
+    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+  }
+};
+
 // Driver Script
 // TODO
 // create an array of random numbers less than 100
@@ -147,10 +137,7 @@ function Driver() {
   myArray1 = removeDuplicates(myArray1);
   const tree1 = Tree(myArray1);
   tree1.insert(10);
-  tree1.insert(100);
-  tree1.insert(1000);
-  // TODO: tree1.insert(0) does not work properly
-  tree1.prettyPrint(tree1.root);
+  prettyPrint(tree1.root);
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
   // unbalance the tree by adding several numbers > 100
