@@ -1,14 +1,99 @@
-function Node(data, left, right) {
+function Node(data, left = null, right = null) {
   return { data, left, right };
 }
 
 function Tree(array) {
   let root = buildTree(array);
-  // console.log(root.data);
-  // console.log(root.left);
-  // console.log(root.right);
-  prettyPrint(root);
-  return { root };
+
+  function insert(value) {
+    // Note: Value always becomes a LEAF in the tree
+    let currentNode = root; // use a pointer
+    while (currentNode.left != null && currentNode.right != null) {
+      // we've reached a leaf node if we exit
+      if (value == currentNode.data) {
+        // if this value already exists in the BST
+        break; // break out of the loop
+      }
+      if (value < currentNode.data) {
+        currentNode = currentNode.left;
+      } else {
+        currentNode = currentNode.right;
+      }
+    }
+    if (value == currentNode.data) {
+      // if this value already exists in the BST
+      return; // don't insert
+    }
+    if (value < currentNode.data) {
+      currentNode.left = Node(value, null, null);
+    } else {
+      currentNode.right = Node(value, null, null);
+    }
+  }
+
+  function deleteItem(value) {
+    // use recursion
+    // 3 cases:
+    // if node has children:
+    // TODO: if it has 1 child:
+    // replace parent with its child, left.right type syntax
+    // i.e. 40 -> 32 -> 34 -> 36 becomes 40 -> 32 -> 36
+    // TODO: if it has 2 children:
+    // Find what is next biggest, just bigger than it
+    // look in right subtree, then look at far left of the right subtree, this replaces the value
+    // leftmost value was easy to remove because it had no children
+    // if leftmost of rightsubtree has children, those children become leftchild of rightsubtree
+    // TODO: if node has no children (A LEAF), easy < no change necessary
+  }
+
+  function find(value) {}
+
+  function levelOrder(callback) {
+    // write code here
+  }
+
+  function height(node) {
+    // write code here
+  }
+
+  function depth(node) {
+    // write code here
+  }
+
+  function isBalanced(tree) {
+    // write code here
+  }
+
+  function rebalance(tree) {
+    // write code here
+  }
+
+  // visualize the binary search tree
+  const prettyPrint = (node, prefix = '', isLeft = true) => {
+    if (node === null) {
+      return;
+    }
+    if (node.right !== null) {
+      prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+    }
+    console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+    if (node.left !== null) {
+      prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+    }
+  };
+
+  return {
+    root,
+    insert,
+    deleteItem,
+    find,
+    levelOrder,
+    height,
+    depth,
+    isBalanced,
+    rebalance,
+    prettyPrint,
+  };
 }
 
 function buildTree(array) {
@@ -27,20 +112,6 @@ function buildTree(array) {
   return root;
 }
 
-// visualize the binary search tree
-const prettyPrint = (node, prefix = '', isLeft = true) => {
-  if (node === null) {
-    return;
-  }
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-  }
-  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-  }
-};
-
 function removeDuplicates(array) {
   let uniqueElements = new Set(array);
   let uniqueArray = Array.from(uniqueElements);
@@ -54,38 +125,6 @@ function sortArray(array) {
     return a - b;
   });
   return array;
-}
-
-function insert(value) {
-  // TODO: check for existing values before insertion
-}
-
-function deleteItem(value) {
-  // write code here
-}
-
-function find(value) {
-  // write code here
-}
-
-function levelOrder(callback) {
-  // write code here
-}
-
-function height(node) {
-  // write code here
-}
-
-function depth(node) {
-  // write code here
-}
-
-function isBalanced(tree) {
-  // write code here
-}
-
-function rebalance(tree) {
-  // write code here
 }
 
 // Driver Script
@@ -107,6 +146,11 @@ function Driver() {
   // remove duplicates
   myArray1 = removeDuplicates(myArray1);
   const tree1 = Tree(myArray1);
+  tree1.insert(10);
+  tree1.insert(100);
+  tree1.insert(1000);
+  // TODO: tree1.insert(0) does not work properly
+  tree1.prettyPrint(tree1.root);
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
   // unbalance the tree by adding several numbers > 100
