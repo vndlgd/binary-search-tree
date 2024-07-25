@@ -5,21 +5,26 @@ function Node(data, left = null, right = null) {
 function Tree(array) {
   let root = buildTree(array);
 
+  /* You need a complete reassignment of the root to be the inserted
+  object. You need to assign the root variable to be the new tree
+  since one doesn't actually exist yet. */
   function insert(value) {
     root = insertRec(root, value);
   }
 
   function insertRec(root, value) {
-    if (root === null) {
+    // base case
+    if (root == null) {
       root = Node(value);
       return root;
     }
+    // recursive case
     if (value < root.data) {
       root.left = insertRec(root.left, value);
     } else if (value > root.data) {
       root.right = insertRec(root.right, value);
     }
-    return root; // if value == root.data
+    return root;
   }
 
   function deleteItem(value) {
@@ -27,9 +32,8 @@ function Tree(array) {
   }
 
   function deleteItemRec(root, value) {
-    // 3 cases:
     // base case
-    if (root === null) {
+    if (root == null) {
       return root;
     }
     // recursive case
@@ -38,15 +42,14 @@ function Tree(array) {
     } else if (value > root.data) {
       root.right = deleteItemRec(root.right, value);
     } else {
-      // node with 1 child or no child
+      // if root has 1 or no children
       if (root.left == null) {
         return root.right;
       } else if (root.right == null) {
         return root.left;
       }
-
-      // node with 2 children
-      root.data = minValue(root.right); // root value at 2 becomes 3
+      // if root has 2 children
+      root.data = minValue(root.right);
       root.right = deleteItemRec(root.right, root.data);
     }
     return root;
@@ -61,7 +64,16 @@ function Tree(array) {
     return minValue;
   }
 
-  function find(value) {}
+  function find(value) {
+    while (root !== null && root.data !== value) {
+      if (value < root.data) {
+        root = root.left;
+      } else if (value > root.data) {
+        root = root.right;
+      }
+    }
+    return root;
+  }
 
   function levelOrder(callback) {
     // write code here
@@ -160,9 +172,8 @@ function Driver() {
   // remove duplicates
   myArray1 = removeDuplicates(myArray1);
   const tree1 = Tree(myArray1);
-  // tree1.deleteItem(2);
-  // tree1.deleteItem(6);
   // tree1.deleteItem(3);
+  console.log(tree1.find(0));
   prettyPrint(tree1.root);
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
