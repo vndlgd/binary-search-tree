@@ -172,26 +172,48 @@ function Tree(array) {
     console.log(root.data);
   }
 
-  function height(node) {}
-
-  function depth(node) {
-    // return the given node's depth
-    // depth: # of edges in path from root to that node
-    let depth = 0;
-    while (root !== null && root.data !== node) {
-      if (node < root.data) {
-        root = root.left;
-        depth += 1;
-      } else if (node > root.data) {
-        root = root.right;
-        depth += 1;
+  function height(node) {
+    let current = root;
+    while (current !== null && current.data !== node) {
+      if (node < current.data) {
+        current = current.left;
+      } else if (node > current.data) {
+        current = current.right;
       }
     }
-    if (root !== null) {
-      return depth;
-    } else {
-      return null;
+    let answer = findHeightRec(current, node);
+    return answer;
+  }
+
+  function findHeightRec(root, node) {
+    if (root === null) {
+      return -1;
     }
+    let leftHeight = findHeightRec(root.left, node);
+    let rightHeight = findHeightRec(root.right, node);
+    let answer = Math.max(leftHeight, rightHeight) + 1;
+
+    return answer;
+  }
+
+  function depth(node) {
+    let current = root;
+    let x = 0;
+    while (current !== null && current.data !== node) {
+      if (node < current.data) {
+        current = current.left;
+        x += 1;
+      } else if (node > current.data) {
+        current = current.right;
+        x += 1;
+      }
+    }
+    return x;
+    return depthRec(root, node);
+  }
+
+  function depthRec(root, node) {
+    return root;
   }
 
   function isBalanced(tree) {
@@ -293,7 +315,8 @@ function Driver() {
     // tree1.preOrder(tree1.isBalanced);
     // tree1.inOrder(tree1.isBalanced);
     // tree1.postOrder(tree1.isBalanced);
-    console.log(tree1.depth(11));
+    console.log(tree1.height(12));
+    console.log(tree1.depth(5));
   } catch (e) {
     console.error(e);
   }
