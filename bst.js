@@ -76,6 +76,37 @@ function Tree(array) {
   }
 
   function levelOrder(callback) {
+    // only accepts callback function as argument
+    if (typeof callback !== 'function') {
+      throw new Error('Callback function is required');
+    }
+    if (root === null) {
+      return;
+    }
+    let queue = []; // array acting as a queue
+    queue.push(root);
+    while (queue.length > 0) {
+      let tempNode = queue.shift(); // grab element from the front of the array
+      isBalanced(tempNode.data); // call the callback on each node as it traverses
+      console.log(tempNode.data);
+      if (tempNode.left !== null) {
+        queue.push(tempNode.left);
+      }
+      if (tempNode.right !== null) {
+        queue.push(tempNode.right);
+      }
+    }
+  }
+
+  function inOrder(callback) {
+    // write code here
+  }
+
+  function preOrder(callback) {
+    // write code here
+  }
+
+  function postOrder(callback) {
     // write code here
   }
 
@@ -166,15 +197,21 @@ function createRandomArray() {
 
 function Driver() {
   // let myArray1 = createRandomArray();
-  let myArray1 = [1, 2, 3, 4, 5];
+  let myArray1 = [1, 3, 5, 7, 9];
   // sort array
   myArray1 = sortArray(myArray1);
   // remove duplicates
   myArray1 = removeDuplicates(myArray1);
+
   const tree1 = Tree(myArray1);
-  // tree1.deleteItem(3);
-  console.log(tree1.find(0));
+  tree1.insert(4);
+  tree1.insert(10);
   prettyPrint(tree1.root);
+  try {
+    tree1.levelOrder(tree1.isBalanced);
+  } catch (e) {
+    console.error(e);
+  }
   // confirm the tree is balanced by calling isBalanced()
   // print out all elements in level, pre, post, and in order
   // unbalance the tree by adding several numbers > 100
