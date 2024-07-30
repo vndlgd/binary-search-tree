@@ -87,7 +87,7 @@ function Tree(array) {
     queue.push(root);
     while (queue.length > 0) {
       let tempNode = queue.shift(); // grab element from the front of the array
-      isBalanced(tempNode.data); // call the callback on each node as it traverses
+      callback(tempNode); // call the callback on each node as it traverses
       console.log(tempNode.data);
       if (tempNode.left !== null) {
         queue.push(tempNode.left);
@@ -99,15 +99,77 @@ function Tree(array) {
   }
 
   function inOrder(callback) {
-    // write code here
+    // only accepts callback function as argument
+    if (typeof callback !== 'function') {
+      throw new Error('Callback function is required');
+    }
+    callback(root);
+    if (root.left !== null) {
+      inOrderRec(root.left);
+    }
+    console.log(root.data);
+    if (root.right !== null) {
+      inOrderRec(root.right);
+    }
+  }
+
+  function inOrderRec(root) {
+    if (root === null) {
+      return null;
+    }
+    preOrderRec(root.left);
+    console.log(root.data);
+    preOrderRec(root.right);
   }
 
   function preOrder(callback) {
-    // write code here
+    // only accepts callback function as argument
+    if (typeof callback !== 'function') {
+      throw new Error('Callback function is required');
+    }
+    callback(root);
+    console.log(root.data);
+    if (root.left !== null) {
+      preOrderRec(root.left);
+    }
+    if (root.right !== null) {
+      preOrderRec(root.right);
+    }
+  }
+
+  function preOrderRec(root) {
+    // base condition
+    if (root === null) {
+      return;
+    }
+    console.log(root.data);
+    preOrderRec(root.left);
+    preOrderRec(root.right);
   }
 
   function postOrder(callback) {
-    // write code here
+    // only accepts callback function as argument
+    if (typeof callback !== 'function') {
+      throw new Error('Callback function is required');
+    }
+    callback(root);
+    if (root.left !== null) {
+      postOrderRec(root.left);
+    }
+    if (root.right !== null) {
+      postOrderRec(root.right);
+    }
+    console.log(root.data);
+  }
+
+  function postOrderRec(root) {
+    // base condition
+    if (root === null) {
+      return;
+    }
+    preOrderRec(root.left);
+    preOrderRec(root.right);
+    console.log(root.data);
   }
 
   function height(node) {
@@ -132,6 +194,9 @@ function Tree(array) {
     deleteItem,
     find,
     levelOrder,
+    preOrder,
+    inOrder,
+    postOrder,
     height,
     depth,
     isBalanced,
@@ -208,7 +273,10 @@ function Driver() {
   tree1.insert(10);
   prettyPrint(tree1.root);
   try {
-    tree1.levelOrder(tree1.isBalanced);
+    // tree1.levelOrder(tree1.isBalanced);
+    // tree1.preOrder(tree1.isBalanced);
+    // tree1.inOrder(tree1.isBalanced);
+    tree1.postOrder(tree1.isBalanced);
   } catch (e) {
     console.error(e);
   }
