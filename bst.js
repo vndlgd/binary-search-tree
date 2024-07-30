@@ -252,7 +252,6 @@ function Tree(array) {
     let inOrderArray = inOrder(isBalanced);
     tree = Tree(inOrderArray);
     return tree.root;
-    // prettyPrint(tree.root);
   }
 
   return {
@@ -317,7 +316,6 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 };
 
 // Driver Script
-// TODO
 // create an array of random numbers less than 100
 function createRandomArray() {
   myArray = [];
@@ -358,6 +356,7 @@ function Driver() {
     console.log('Confirm that the tree is unbalanced by calling isBalanced.');
     console.log('isBalanced: ' + tree1.isBalanced(tree1.root));
 
+    console.log('Rebalancing tree...');
     tree1.root = tree1.rebalance(tree1);
     console.log('Confirm that the tree is balanced by calling isBalanced');
     console.log('isBalanced: ' + tree1.isBalanced(tree1.root));
