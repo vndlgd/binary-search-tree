@@ -5,6 +5,8 @@ function Node(data, left = null, right = null) {
 function Tree(array) {
   let root = buildTree(array);
 
+  let orderArray = []; // for level, pre, in, post order traversal
+
   /* You need a complete reassignment of the root to be the inserted
   object. You need to assign the root variable to be the new tree
   since one doesn't actually exist yet. */
@@ -76,7 +78,7 @@ function Tree(array) {
   }
 
   function levelOrder(callback) {
-    let answer = [];
+    orderArray = [];
     // only accepts callback function as argument
     if (typeof callback !== 'function') {
       throw new Error('Callback function is required');
@@ -89,7 +91,7 @@ function Tree(array) {
     while (queue.length > 0) {
       let tempNode = queue.shift(); // grab element from the front of the array
       callback(tempNode); // call the callback on each node as it traverses
-      answer.push(tempNode.data);
+      orderArray.push(tempNode.data);
       if (tempNode.left !== null) {
         queue.push(tempNode.left);
       }
@@ -97,48 +99,50 @@ function Tree(array) {
         queue.push(tempNode.right);
       }
     }
-    return answer;
+    return orderArray;
   }
 
   function inOrder(callback) {
+    orderArray = [];
     // only accepts callback function as argument
     if (typeof callback !== 'function') {
       throw new Error('Callback function is required');
     }
     callback(root);
-    console.log('INORDER:');
     if (root.left !== null) {
       inOrderRec(root.left);
     }
-    console.log(root.data);
+    orderArray.push(root.data);
     if (root.right !== null) {
       inOrderRec(root.right);
     }
+    return orderArray;
   }
 
   function inOrderRec(root) {
     if (root === null) {
       return null;
     }
-    preOrderRec(root.left);
-    console.log(root.data);
-    preOrderRec(root.right);
+    inOrderRec(root.left);
+    orderArray.push(root.data);
+    inOrderRec(root.right);
   }
 
   function preOrder(callback) {
+    orderArray = [];
     // only accepts callback function as argument
     if (typeof callback !== 'function') {
       throw new Error('Callback function is required');
     }
     callback(root);
-    console.log('PREORDER:');
-    console.log(root.data);
+    orderArray.push(root.data);
     if (root.left !== null) {
       preOrderRec(root.left);
     }
     if (root.right !== null) {
       preOrderRec(root.right);
     }
+    return orderArray;
   }
 
   function preOrderRec(root) {
@@ -146,25 +150,27 @@ function Tree(array) {
     if (root === null) {
       return;
     }
-    console.log(root.data);
+    orderArray.push(root.data);
     preOrderRec(root.left);
     preOrderRec(root.right);
   }
 
   function postOrder(callback) {
+    orderArray = [];
     // only accepts callback function as argument
     if (typeof callback !== 'function') {
       throw new Error('Callback function is required');
     }
     callback(root);
-    console.log('POSTORDER:');
     if (root.left !== null) {
       postOrderRec(root.left);
     }
     if (root.right !== null) {
       postOrderRec(root.right);
     }
-    console.log(root.data);
+    orderArray.push(root.data);
+
+    return orderArray;
   }
 
   function postOrderRec(root) {
@@ -172,9 +178,9 @@ function Tree(array) {
     if (root === null) {
       return;
     }
-    preOrderRec(root.left);
-    preOrderRec(root.right);
-    console.log(root.data);
+    postOrderRec(root.left);
+    postOrderRec(root.right);
+    orderArray.push(root.data);
   }
 
   function height(node) {
@@ -214,11 +220,6 @@ function Tree(array) {
       }
     }
     return x;
-    return depthRec(root, node);
-  }
-
-  function depthRec(root, node) {
-    return root;
   }
 
   // https://www.geeksforgeeks.org/how-to-determine-if-a-binary-tree-is-balanced/
@@ -248,7 +249,10 @@ function Tree(array) {
   }
 
   function rebalance(tree) {
-    // TODO: implement this
+    let inOrderArray = inOrder(isBalanced);
+    tree = Tree(inOrderArray);
+    return tree.root;
+    // prettyPrint(tree.root);
   }
 
   return {
@@ -324,40 +328,53 @@ function createRandomArray() {
 }
 
 function Driver() {
-  // let myArray1 = createRandomArray();
-  let myArray1 = [1, 3, 5, 7, 9];
+  let myArray1 = createRandomArray();
+  // let myArray1 = [1, 3, 5, 7, 9];
   // sort array
   myArray1 = sortArray(myArray1);
   // remove duplicates
   myArray1 = removeDuplicates(myArray1);
 
   const tree1 = Tree(myArray1);
-  tree1.insert(4);
-  tree1.insert(10);
-  tree1.insert(11);
-  tree1.insert(12);
-  prettyPrint(tree1.root);
   try {
-    console.log('BALANCED: TRUE OR FALSE');
-    console.log(tree1.isBalanced(tree1.root));
-    console.log('LEVEL ORDER:');
-    console.log(tree1.levelOrder(tree1.isBalanced));
-    tree1.rebalance(tree1.root);
     prettyPrint(tree1.root);
-    // tree1.preOrder(tree1.isBalanced);
-    // tree1.inOrder(tree1.isBalanced);
-    // tree1.postOrder(tree1.isBalanced);
-    // console.log(tree1.height(12));
-    // console.log(tree1.depth(5));
+    console.log('Confirm that the tree is balanced by calling isBalanced');
+    console.log('isBalanced: ' + tree1.isBalanced(tree1.root));
+    console.log('LEVEL ORDER');
+    console.log(tree1.levelOrder(tree1.isBalanced));
+    console.log('PRE ORDER');
+    console.log(tree1.preOrder(tree1.isBalanced));
+    console.log('IN ORDER');
+    console.log(tree1.inOrder(tree1.isBalanced));
+    console.log('POST ORDER');
+    console.log(tree1.postOrder(tree1.isBalanced));
+
+    tree1.insert(101);
+    tree1.insert(202);
+    tree1.insert(303);
+    tree1.insert(404);
+    tree1.insert(505);
+
+    console.log('Confirm that the tree is unbalanced by calling isBalanced.');
+    console.log('isBalanced: ' + tree1.isBalanced(tree1.root));
+
+    tree1.root = tree1.rebalance(tree1);
+    console.log('Confirm that the tree is balanced by calling isBalanced');
+    console.log('isBalanced: ' + tree1.isBalanced(tree1.root));
+
+    console.log('LEVEL ORDER');
+    console.log(tree1.levelOrder(tree1.isBalanced));
+    console.log('PRE ORDER');
+    console.log(tree1.preOrder(tree1.isBalanced));
+    console.log('IN ORDER');
+    console.log(tree1.inOrder(tree1.isBalanced));
+    console.log('POST ORDER');
+    console.log(tree1.postOrder(tree1.isBalanced));
+
+    prettyPrint(tree1.root);
   } catch (e) {
     console.error(e);
   }
-  // confirm the tree is balanced by calling isBalanced()
-  // print out all elements in level, pre, post, and in order
-  // unbalance the tree by adding several numbers > 100
-  // confirm the tree is unbalanced by calling isBalanced()
-  // balance the tree by calling rebalance
-  // print out all elements in level, pre, post and in order
 }
 
 Driver();
