@@ -76,6 +76,7 @@ function Tree(array) {
   }
 
   function levelOrder(callback) {
+    let answer = [];
     // only accepts callback function as argument
     if (typeof callback !== 'function') {
       throw new Error('Callback function is required');
@@ -88,7 +89,7 @@ function Tree(array) {
     while (queue.length > 0) {
       let tempNode = queue.shift(); // grab element from the front of the array
       callback(tempNode); // call the callback on each node as it traverses
-      console.log(tempNode.data);
+      answer.push(tempNode.data);
       if (tempNode.left !== null) {
         queue.push(tempNode.left);
       }
@@ -96,6 +97,7 @@ function Tree(array) {
         queue.push(tempNode.right);
       }
     }
+    return answer;
   }
 
   function inOrder(callback) {
@@ -104,6 +106,7 @@ function Tree(array) {
       throw new Error('Callback function is required');
     }
     callback(root);
+    console.log('INORDER:');
     if (root.left !== null) {
       inOrderRec(root.left);
     }
@@ -128,6 +131,7 @@ function Tree(array) {
       throw new Error('Callback function is required');
     }
     callback(root);
+    console.log('PREORDER:');
     console.log(root.data);
     if (root.left !== null) {
       preOrderRec(root.left);
@@ -153,6 +157,7 @@ function Tree(array) {
       throw new Error('Callback function is required');
     }
     callback(root);
+    console.log('POSTORDER:');
     if (root.left !== null) {
       postOrderRec(root.left);
     }
@@ -216,12 +221,34 @@ function Tree(array) {
     return root;
   }
 
+  // https://www.geeksforgeeks.org/how-to-determine-if-a-binary-tree-is-balanced/
   function isBalanced(tree) {
-    // write code here
+    // The difference between heights of left and right subtree
+    // of every node is not more than 1
+    if (tree === null) {
+      return;
+    }
+    let lh = isBalancedHelper(tree.left);
+    let rh = isBalancedHelper(tree.right);
+    if (Math.abs(lh - rh) <= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // https://www.geeksforgeeks.org/how-to-determine-if-a-binary-tree-is-balanced/
+  function isBalancedHelper(root) {
+    if (root === null) {
+      return -1;
+    }
+    return (
+      Math.max(isBalancedHelper(root.left), isBalancedHelper(root.right)) + 1
+    );
   }
 
   function rebalance(tree) {
-    // write code here
+    // TODO: implement this
   }
 
   return {
@@ -311,12 +338,17 @@ function Driver() {
   tree1.insert(12);
   prettyPrint(tree1.root);
   try {
-    // tree1.levelOrder(tree1.isBalanced);
+    console.log('BALANCED: TRUE OR FALSE');
+    console.log(tree1.isBalanced(tree1.root));
+    console.log('LEVEL ORDER:');
+    console.log(tree1.levelOrder(tree1.isBalanced));
+    tree1.rebalance(tree1.root);
+    prettyPrint(tree1.root);
     // tree1.preOrder(tree1.isBalanced);
     // tree1.inOrder(tree1.isBalanced);
     // tree1.postOrder(tree1.isBalanced);
-    console.log(tree1.height(12));
-    console.log(tree1.depth(5));
+    // console.log(tree1.height(12));
+    // console.log(tree1.depth(5));
   } catch (e) {
     console.error(e);
   }
